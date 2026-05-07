@@ -1,0 +1,25 @@
+name: 无忧行自动更新
+on:
+  schedule:
+    - cron: "0 0 */6 * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      WYH_TOKEN: ${{ secrets.WYH_TOKEN }}
+      WYH_BASE_URL: ${{ secrets.WYH_BASE_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 安装依赖
+        run: pip install requests
+      - name: 运行脚本
+        run: python 无忧行.py
+      - name: 保存结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxy_list
+          path: /tmp/*.txt
