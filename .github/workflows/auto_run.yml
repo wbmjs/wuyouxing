@@ -1,15 +1,14 @@
-
 name: 无忧行自动获取 + 提交到仓库
 on:
   schedule:
-    - cron: "0 0 */6 * *"  # 每6小时自动跑一次
-  workflow_dispatch:       # 允许手动点击运行
+    - cron: "0 0 */6 * *"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write      # 允许自动提交代码
+      contents: write
     env:
       WYH_TOKEN: ${{ secrets.WYH_TOKEN }}
       WYH_BASE_URL: ${{ secrets.WYH_BASE_URL }}
@@ -17,23 +16,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 安装依赖
         run: pip install requests
 
-      - name: 运行获取脚本
+      - name: 运行脚本
         run: python 无忧行.py
 
-      - name: 复制结果到仓库根目录
+      - name: 复制结果到仓库
         run: |
           cp /tmp/proxy_list_*.txt proxy_list.txt
 
-      - name: 自动提交并推送到仓库
-        run: |
-          git config --local user.name "github-actions"
-          git config --local user.email "actions@github.com"
-          git add proxy_list.txt
-          git commit -m "自动更新代理列表 $(date '+%Y-%m-%d %H:%M:%S')"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+      # 这是官方稳定提交方式，绝对不报错
+      - name: 提交并推送
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "自动更新代理列表 $(date '+%Y-%m-%d %H:%M:%S')"
+          add: "proxy_list.txt"
