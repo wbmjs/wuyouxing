@@ -1,43 +1,41 @@
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:6443#HK, 香港 Ultra
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:5501#SG, 新加坡 Pro+
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:5509#MY, 吉隆坡 Pro+
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:5502#JP, 东京 Pro+
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6510#US, 硅谷 Pro+
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:5503#KR, 首尔 Pro+
-https://3dab8502-tf1xc0-twm6ew-dfj4.fmtdc1ext.sghuawei.com:5443#US, 静态住宅ISP
-https://bf72e029-tf1xc0-twm6ew-dfj4.6mar2026.cdntoutiao.com:443#US, 西雅图
-https://7e9505e5-tf1xc0-twm6ew-dfj4.6mar2026.eumiui.com:443#US, 洛杉矶
-https://664aa906-tf1xc0-twm6ew-dfj4.laxdc2.eumiui.com:443#US, 洛杉矶二号
-https://3dab8502-tf1xc0-twm6ew-dfj4.fmtdc1ext.sghuawei.com:443#US, 硅谷
-https://bf72e029-tf1xc0-twm6ew-dfj4.6mar2026.cdntoutiao.com:2445#US, 西雅图三号
-https://66d47905-tf1xc0-twm6ew-dfj4.fmt7mar2026.cdntoutiao.com:443#US, 旧金山
-https://c36d7223-tf1xc0-twm6ew-dfj4.hkt.s1xiaomiev.com:443#HK, 香港
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6443#HK, 香港二号
-https://b9af6c39-tf1b40-twlk6w-dfj4.mi-imgs.com:443#HK, 香港三号
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6179#TW, 台中
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:6118#SG, 新加坡
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6181#SG, 新加坡二号
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6182#JP, 东京
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6192#JP, 东京二号
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6187#ID, 雅加达
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:1688#AU, 悉尼
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:1681#KR, 首尔
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:1692#NL, 阿姆斯特丹
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:1691#CA, 多伦多
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:1695#IT, 米兰
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:1685#FR, 巴黎
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:1704#AE, 迪拜
-https://6504d005-tf1b40-twlk6w-dfj4.nubfra.ukuaishou.com:443#DE, 法兰克福
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:1682#GB, 伦敦
-https://809bc936-tf1b40-twlk6w-dfj4.lite-nubesin.ukuaishou.com:443#SG, Singapore Lite
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:6185#RU, 莫斯科
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6191#PK, 卡拉奇
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:6186#TR, 伊斯坦布尔
-https://5246de7d-tf1b40-twlk6w-dfj4.fourtwo.fhuawei.com:1696#BR, 圣保罗
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:1686#IN, 孟买
-https://ad01c45e-tf1xc0-twm6ew-dfj4.lite-nubetko.ukuaishou.com:443#JP, Tokyo Lite
-https://bf72e029-tf1xc0-twm6ew-dfj4.6mar2026.cdntoutiao.com:5678#MX, 墨西哥城
-https://a69c1f2c-tf1xc0-twm6ew-dfj4.fourtwo.fhuawei.com:1703#ZA, 约翰内斯堡
-https://bfc04e11-tf1xc0-twm6ew-dfj4.lite-nuremberg.ukuaishou.com:443#DE, Nuremberg Lite
-https://1aecbc83-tf1b40-twlk6w-dfj4.hel1-dc2.ukuaishou.com:443#FI, Helsinki
-https://06e4681a-tf1xc0-twm6ew-dfj4.nbg1-dc4.ukuaishou.com:443#DE, Nuremberg
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6443#HK, 香港 Ultra
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:5501#SG, 新加坡 Pro+
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:5509#MY, 吉隆坡 Pro+
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:5502#JP, 东京 Pro+
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6510#US, 硅谷 Pro+
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:5503#KR, 首尔 Pro+
+https://7ce077a3-tf3s00-twm6ew-dfj4.fmtdc1ext.sghuawei.com:5443#US, 静态住宅ISP
+https://08a8a76e-tf3s00-twm6ew-dfj4.6mar2026.cdntoutiao.com:443#US, 西雅图
+https://06f141c1-tf35s0-twlk6w-dfj4.6mar2026.eumiui.com:443#US, 洛杉矶
+https://da3a7d9c-tf3s00-twm6ew-dfj4.laxdc2.eumiui.com:443#US, 洛杉矶二号
+https://7ce077a3-tf3s00-twm6ew-dfj4.fmtdc1ext.sghuawei.com:443#US, 硅谷
+https://08a8a76e-tf3s00-twm6ew-dfj4.6mar2026.cdntoutiao.com:2445#US, 西雅图三号
+https://a876d88d-tf3s00-twm6ew-dfj4.fmt7mar2026.cdntoutiao.com:443#US, 旧金山
+https://08e3c178-tf3s00-twm6ew-dfj4.hkt.s1xiaomiev.com:443#HK, 香港
+https://82c4f982-tf3s00-twm6ew-dfj4.mi-imgs.com:443#HK, 香港三号
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6179#TW, 台中
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6118#SG, 新加坡
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6181#SG, 新加坡二号
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:6182#JP, 东京
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:6192#JP, 东京二号
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:6187#ID, 雅加达
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1688#AU, 悉尼
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:1681#KR, 首尔
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1692#NL, 阿姆斯特丹
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1691#CA, 多伦多
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1695#IT, 米兰
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1685#FR, 巴黎
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1704#AE, 迪拜
+https://0b51a596-tf35s0-twlk6w-dfj4.nubfra.ukuaishou.com:443#DE, 法兰克福
+https://f36d726c-tf35s0-twlk6w-dfj4.lite-nubesin.ukuaishou.com:443#SG, Singapore Lite
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:6185#RU, 莫斯科
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6191#PK, 卡拉奇
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:6186#TR, 伊斯坦布尔
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1696#BR, 圣保罗
+https://96be798a-tf35s0-twlk6w-dfj4.fourtwo.fhuawei.com:1686#IN, 孟买
+https://5d9680a1-tf3s00-twm6ew-dfj4.lite-nubetko.ukuaishou.com:443#JP, Tokyo Lite
+https://08a8a76e-tf3s00-twm6ew-dfj4.6mar2026.cdntoutiao.com:5678#MX, 墨西哥城
+https://c68a62a5-tf3s00-twm6ew-dfj4.fourtwo.fhuawei.com:1703#ZA, 约翰内斯堡
+https://8dad6518-tf3s00-twm6ew-dfj4.lite-nuremberg.ukuaishou.com:443#DE, Nuremberg Lite
+https://d6798528-tf35s0-twlk6w-dfj4.hel1-dc2.ukuaishou.com:443#FI, Helsinki
+https://ea0c149f-tf35s0-twlk6w-dfj4.nbg1-dc4.ukuaishou.com:443#DE, Nuremberg
