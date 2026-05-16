@@ -1,42 +1,43 @@
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:6443#HK, 香港 Ultra
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:5501#SG, 新加坡 Pro+
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:5509#MY, 吉隆坡 Pro+
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:5502#JP, 东京 Pro+
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:6510#US, 硅谷 Pro+
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:5503#KR, 首尔 Pro+
-https://4fd29c1c-tf7hc0-twm6ew-dfj4.fmtdc1ext.sghuawei.com:5443#US, 静态住宅ISP
-https://6813b365-tf6v40-twlk6w-dfj4.6mar2026.cdntoutiao.com:443#US, 西雅图
-https://4dc96725-tf6v40-twlk6w-dfj4.6mar2026.eumiui.com:443#US, 洛杉矶
-https://f6574115-tf7hc0-twm6ew-dfj4.laxdc2.eumiui.com:443#US, 洛杉矶二号
-https://4fd29c1c-tf7hc0-twm6ew-dfj4.fmtdc1ext.sghuawei.com:443#US, 硅谷
-https://b780b064-tf7hc0-twm6ew-dfj4.6mar2026.cdntoutiao.com:2445#US, 西雅图三号
-https://b0484cb4-tf6v40-twlk6w-dfj4.fmt7mar2026.cdntoutiao.com:443#US, 旧金山
-https://39502319-tf6v40-twlk6w-dfj4.hkt.s1xiaomiev.com:443#HK, 香港
-https://099e16be-tf6v40-twlk6w-dfj4.mi-imgs.com:443#HK, 香港三号
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:6179#TW, 台中
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:6118#SG, 新加坡
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:6181#SG, 新加坡二号
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:6182#JP, 东京
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:6192#JP, 东京二号
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:6187#ID, 雅加达
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1688#AU, 悉尼
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1681#KR, 首尔
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:1692#NL, 阿姆斯特丹
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:1691#CA, 多伦多
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1695#IT, 米兰
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1685#FR, 巴黎
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1704#AE, 迪拜
-https://ff445c37-tf7hc0-twm6ew-dfj4.nubfra.ukuaishou.com:443#DE, 法兰克福
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:1682#GB, 伦敦
-https://287fb87b-tf6v40-twlk6w-dfj4.lite-nubesin.ukuaishou.com:443#SG, Singapore Lite
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:6185#RU, 莫斯科
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:6191#PK, 卡拉奇
-https://c81e894f-tf6v40-twlk6w-dfj4.fourtwo.fhuawei.com:6186#TR, 伊斯坦布尔
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1696#BR, 圣保罗
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1686#IN, 孟买
-https://5a12cfed-tf6v40-twlk6w-dfj4.lite-nubetko.ukuaishou.com:443#JP, Tokyo Lite
-https://b780b064-tf7hc0-twm6ew-dfj4.6mar2026.cdntoutiao.com:5678#MX, 墨西哥城
-https://4a261f81-tf7hc0-twm6ew-dfj4.fourtwo.fhuawei.com:1703#ZA, 约翰内斯堡
-https://918ebb35-tf6v40-twlk6w-dfj4.lite-nuremberg.ukuaishou.com:443#DE, Nuremberg Lite
-https://4d96c3ac-tf7hc0-twm6ew-dfj4.hel1-dc2.ukuaishou.com:443#FI, Helsinki
-https://09a38ef3-tf7hc0-twm6ew-dfj4.nbg1-dc4.ukuaishou.com:443#DE, Nuremberg
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:6443#HK, 香港 Ultra
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:5501#SG, 新加坡 Pro+
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:5509#MY, 吉隆坡 Pro+
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:5502#JP, 东京 Pro+
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:6510#US, 硅谷 Pro+
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:5503#KR, 首尔 Pro+
+https://32bf9257-tf8ps0-twlk6w-dfj4.fmtdc1ext.sghuawei.com:5443#US, 静态住宅ISP
+https://6e583dcc-tf8ps0-twlk6w-dfj4.6mar2026.cdntoutiao.com:443#US, 西雅图
+https://0700dd1b-tf9c00-twm6ew-dfj4.6mar2026.eumiui.com:443#US, 洛杉矶
+https://5f46f2ff-tf9c00-twm6ew-dfj4.laxdc2.eumiui.com:443#US, 洛杉矶二号
+https://35f24543-tf9c00-twm6ew-dfj4.fmtdc1ext.sghuawei.com:443#US, 硅谷
+https://dceb6002-tf9c00-twm6ew-dfj4.6mar2026.cdntoutiao.com:2445#US, 西雅图三号
+https://11da2823-tf9c00-twm6ew-dfj4.fmt7mar2026.cdntoutiao.com:443#US, 旧金山
+https://8784072a-tf9c00-twm6ew-dfj4.hkt.s1xiaomiev.com:443#HK, 香港
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:6443#HK, 香港二号
+https://32ab7ef5-tf9c00-twm6ew-dfj4.mi-imgs.com:443#HK, 香港三号
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:6179#TW, 台中
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:6118#SG, 新加坡
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:6181#SG, 新加坡二号
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:6182#JP, 东京
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:6192#JP, 东京二号
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:6187#ID, 雅加达
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1688#AU, 悉尼
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:1681#KR, 首尔
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:1692#NL, 阿姆斯特丹
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:1691#CA, 多伦多
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1695#IT, 米兰
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:1685#FR, 巴黎
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1704#AE, 迪拜
+https://2069ec3c-tf9c00-twm6ew-dfj4.nubfra.ukuaishou.com:443#DE, 法兰克福
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1682#GB, 伦敦
+https://7148d17d-tf8ps0-twlk6w-dfj4.lite-nubesin.ukuaishou.com:443#SG, Singapore Lite
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:6185#RU, 莫斯科
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:6191#PK, 卡拉奇
+https://c16a1b7d-tf8ps0-twlk6w-dfj4.fourtwo.fhuawei.com:6186#TR, 伊斯坦布尔
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1696#BR, 圣保罗
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1686#IN, 孟买
+https://2161a5cd-tf8ps0-twlk6w-dfj4.lite-nubetko.ukuaishou.com:443#JP, Tokyo Lite
+https://dceb6002-tf9c00-twm6ew-dfj4.6mar2026.cdntoutiao.com:5678#MX, 墨西哥城
+https://e7e64641-tf9c00-twm6ew-dfj4.fourtwo.fhuawei.com:1703#ZA, 约翰内斯堡
+https://e6a6ea89-tf8ps0-twlk6w-dfj4.lite-nuremberg.ukuaishou.com:443#DE, Nuremberg Lite
+https://5937eef2-tf9c00-twm6ew-dfj4.hel1-dc2.ukuaishou.com:443#FI, Helsinki
+https://3df76a6f-tf9c00-twm6ew-dfj4.nbg1-dc4.ukuaishou.com:443#DE, Nuremberg
