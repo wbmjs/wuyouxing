@@ -26,11 +26,10 @@ jobs:
 
       - name: 复制结果到仓库
         run: |
-          cp /tmp/proxy_list_*.txt proxy_list.txt
+          cp /tmp/config.yaml config.yaml
 
-      # 这是官方稳定提交方式，绝对不报错
       - name: 提交并推送
         uses: EndBug/add-and-commit@v9
         with:
-          message: "自动更新代理列表 $(date '+%Y-%m-%d %H:%M:%S')"
-          add: "proxy_list.txt"
+          message: "自动更新配置 $(date '+%Y-%m-%d %H:%M:%S')"
+          add: "config.yaml"
