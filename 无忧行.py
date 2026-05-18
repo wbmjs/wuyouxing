@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 无忧行节点 → 输出完整 Clash YAML
-修复：节点注入 + token 刷新 + 调试日志
 """
 import os
 import re
@@ -36,7 +35,6 @@ class AllNodesFetcher:
             'Pac-Encode': 'base64',
         })
 
-    # ── token 刷新（每次请求后都要调） ──
     def _refresh_token(self, raw: dict):
         new_token = raw.get('session', {}).get('token')
         if new_token and new_token != self.token:
@@ -44,7 +42,6 @@ class AllNodesFetcher:
             self.token = new_token
             self.session.headers['token'] = self.token
 
-    # ── 获取节点列表 ──
     def get_node_list(self) -> List[Dict]:
         print("[1/3] 获取节点列表...")
         url = f"{self.base_url}/chrome/popup"
@@ -69,11 +66,8 @@ class AllNodesFetcher:
             nodes.append({'id': node_id, 'name': clean})
 
         print(f"  找到 {len(nodes)} 个节点")
-        for n in nodes:
-            print(f"    [{n['id']}] {n['name']}")
         return nodes
 
-    # ── 获取单个节点代理地址 ──
     def get_proxy_for_node(self, node_id: str) -> Optional[str]:
         url = f"{self.base_url}/chrome/popup"
         params = {'token': self.token, 'lang': 'zh-CN', 'version': '1.3.23'}
@@ -81,7 +75,7 @@ class AllNodesFetcher:
         try:
             resp = self.session.post(url, params=params, data=data, timeout=10)
             raw = resp.json()
-            self._refresh_token(raw)          # ← 关键：每次都刷新 token
+            self._refresh_token(raw)
 
             b64_data = (raw.get('session', {})
                         .get('proxy_settings', {})
@@ -97,30 +91,44 @@ class AllNodesFetcher:
             if match:
                 return match.group(1)
 
-            # 兜底：打印 PAC 片段方便排查
             print(f"    [!] node {node_id}: 未匹配到 proxy 变量")
             print(f"        PAC 片段: {pac_code[:300]}")
         except Exception as e:
             print(f"    [!] node {node_id}: 请求异常 {e}")
         return None
 
+    # ── 修复：deduplicate 逻辑 ──
     def deduplicate(self, results):
-        seen = {}
-        return [r for r in results
-                if not (r['proxy'] in seen or seen.setdefault(r['proxy'], True))]
+        seen = set()
+        unique = []
+        for r in results:
+            if r['proxy'] not in seen:
+                seen.add(r['proxy'])
+                unique.append(r)
+        return unique
 
-    def parse_proxy(self, s):
-        s = (s.replace('HTTPS ', '').replace('HTTP ', '')
-               .replace('https://', '').replace('http://', ''))
+    # ── 修复：解析单个 host:port ──
+    def parse_single_proxy(self, s: str):
+        """解析 'HTTPS host:port' 或 'host:port'"""
+        s = (s.strip()
+                .replace('HTTPS ', '')
+                .replace('HTTP ', '')
+                .replace('https://', '')
+                .replace('http://', ''))
         if ':' in s:
-            h, p = s.split(':', 1)
+            h, p = s.rsplit(':', 1)
             return h.strip(), int(p)
         return s.strip(), 443
 
-    # ── 生成完整 YAML ──
+    # ── 修复：处理分号分隔的多服务器 ──
+    def parse_proxy(self, s: str):
+        """返回第一个可用的 (host, port)"""
+        parts = [p.strip() for p in s.split(';') if p.strip()]
+        return self.parse_single_proxy(parts[0])
+
     def generate_full_clash_yaml(self, nodes: List[Dict]) -> str:
-        # 收集所有节点名，后面注入 proxy-groups
         node_names = [f'"{n["name"]}"' for n in nodes]
+        node_list_str = ', '.join(node_names)
 
         yaml = '''mixed-port: 7897
 allow-lan: true
@@ -168,9 +176,7 @@ proxies:
             host, port = self.parse_proxy(node['proxy'])
             yaml += f'  - {{name: "{name}", type: http, server: {host}, port: {port}, tls: true}}\n'
 
-        # ── 节点列表字符串（注入 proxy-groups）──
-        node_list_str = ', '.join(node_names)
-
+        # ── proxy-groups ──
         yaml += f'''
 proxy-groups:
   - name: "🚀 节点选择"
@@ -275,9 +281,8 @@ proxy-groups:
   - name: "🐟 漏网之鱼"
     type: select
     proxies: ["🚀 节点选择", "⚡ 自动选择", DIRECT, REJECT]
-'''
-        # ── rule-providers（原样保留）──
-        yaml += '''rule-providers:
+
+rule-providers:
   category-ads-all: {type: http, behavior: domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ads-all.mrs", path: ./ruleset/category-ads-all.mrs, interval: 86400, format: mrs}
   private: {type: http, behavior: domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs", path: ./ruleset/private.mrs, interval: 86400, format: mrs}
   private-ip: {type: http, behavior: ipcidr, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs", path: ./ruleset/private-ip.mrs, interval: 86400, format: mrs}
@@ -470,27 +475,23 @@ rules:
 
     def run(self):
         nodes = self.get_node_list()
-        if not nodes:
-            print("[!] 未获取到节点")
-            return
 
-        results = []
-        print("\n[2/3] 获取代理地址...")
-        for i, node in enumerate(nodes, 1):
-            print(f"  {i}/{len(nodes)} {node['name']}")
-            proxy = self.get_proxy_for_node(node['id'])
-            if proxy:
-                results.append({"name": node["name"], "proxy": proxy})
-                print(f"    ✓ {proxy}")
-            else:
-                print(f"    ✗ 失败")
-            time.sleep(0.8)
-
-        valid = self.deduplicate(results)
-
-        if not valid:
-            print("\n[!] 所有节点均获取失败，不生成配置")
-            return
+        valid = []
+        if nodes:
+            results = []
+            print("\n[2/3] 获取代理地址...")
+            for i, node in enumerate(nodes, 1):
+                print(f"  {i}/{len(nodes)} {node['name']}")
+                proxy = self.get_proxy_for_node(node['id'])
+                if proxy:
+                    results.append({"name": node["name"], "proxy": proxy})
+                    print(f"    ✓ {proxy[:80]}...")
+                else:
+                    print(f"    ✗ 失败")
+                time.sleep(0.8)
+            valid = self.deduplicate(results)
+        else:
+            print("[!] 未获取到节点列表，将生成空配置")
 
         print(f"\n[3/3] 生成 YAML（{len(valid)} 个有效节点）...")
         yaml_content = self.generate_full_clash_yaml(valid)
@@ -500,8 +501,12 @@ rules:
         with open(yaml_path, "w", encoding="utf-8") as f:
             f.write(yaml_content)
 
-        print(f"\n✅ 生成完成：{yaml_path}")
-        print(f"✅ 有效节点：{len(valid)} 个")
+        if valid:
+            print(f"\n✅ 生成完成：{yaml_path}")
+            print(f"✅ 有效节点：{len(valid)} 个")
+        else:
+            print(f"\n⚠️ 生成完成但无有效节点：{yaml_path}")
+            print("⚠️ 请检查 WYH_TOKEN / WYH_BASE_URL 是否正确")
 
 
 if __name__ == "__main__":
