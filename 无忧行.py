@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-无忧行节点 → 输出完整Clash YAML（规则 100% 和你给的一样）
+无忧行节点 → 输出完整 Clash YAML
+修复：节点注入 + token 刷新 + 调试日志
 """
 import os
 import re
@@ -13,6 +14,7 @@ from typing import Dict, List, Optional
 
 EXPORT_DIR = "/tmp"
 
+
 def safe_b64decode(b64_str: str) -> str:
     padding = 4 - len(b64_str) % 4
     if padding != 4:
@@ -20,11 +22,12 @@ def safe_b64decode(b64_str: str) -> str:
     raw_bytes = base64.b64decode(b64_str)
     return raw_bytes.decode('utf-8', errors='ignore')
 
+
 class AllNodesFetcher:
     def __init__(self):
         self.token = os.getenv("WYH_TOKEN", "")
         self.base_url = os.getenv("WYH_BASE_URL", "")
-        
+
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
@@ -33,31 +36,44 @@ class AllNodesFetcher:
             'Pac-Encode': 'base64',
         })
 
+    # ── token 刷新（每次请求后都要调） ──
+    def _refresh_token(self, raw: dict):
+        new_token = raw.get('session', {}).get('token')
+        if new_token and new_token != self.token:
+            print(f"  [token] 刷新 → {new_token[:8]}...")
+            self.token = new_token
+            self.session.headers['token'] = self.token
+
+    # ── 获取节点列表 ──
     def get_node_list(self) -> List[Dict]:
         print("[1/3] 获取节点列表...")
         url = f"{self.base_url}/chrome/popup"
         params = {'token': self.token, 'lang': 'zh-CN', 'version': '1.3.23'}
         data = {'proxy_mode': '5', 'proxy_id': '8'}
+
         resp = self.session.post(url, params=params, data=data, timeout=15)
         raw = resp.json()
-        new_token = raw.get('session', {}).get('token')
-        if new_token:
-            self.token = new_token
-            self.session.headers['token'] = self.token
+        self._refresh_token(raw)
+
         html = raw.get('html', {}).get('body', '')
         nodes = []
         pattern = r'<option\s+value="(\d+)"(?:\s+selected)?>(.*?)</option>'
         matches = re.findall(pattern, html, re.DOTALL)
+
         for node_id, raw_text in matches:
             text = re.sub(r'<[^>]+>', '', raw_text).strip()
             if '自动选择' in text:
                 continue
             clean = re.sub(r'[\U0001f300-\U0001f9ff]', '', text)
-            clean = re.sub(r'\[.*?\]', '', clean).strip()
+            clean = re.sub(r'$$.*?$$', '', clean).strip()
             nodes.append({'id': node_id, 'name': clean})
-        print(f"找到 {len(nodes)} 个节点")
+
+        print(f"  找到 {len(nodes)} 个节点")
+        for n in nodes:
+            print(f"    [{n['id']}] {n['name']}")
         return nodes
 
+    # ── 获取单个节点代理地址 ──
     def get_proxy_for_node(self, node_id: str) -> Optional[str]:
         url = f"{self.base_url}/chrome/popup"
         params = {'token': self.token, 'lang': 'zh-CN', 'version': '1.3.23'}
@@ -65,32 +81,47 @@ class AllNodesFetcher:
         try:
             resp = self.session.post(url, params=params, data=data, timeout=10)
             raw = resp.json()
-            b64_data = raw.get('session', {}).get('proxy_settings', {}).get('value', {}).get('pacScript', {}).get('data', '')
+            self._refresh_token(raw)          # ← 关键：每次都刷新 token
+
+            b64_data = (raw.get('session', {})
+                        .get('proxy_settings', {})
+                        .get('value', {})
+                        .get('pacScript', {})
+                        .get('data', ''))
             if not b64_data:
+                print(f"    [!] node {node_id}: pacScript.data 为空")
                 return None
+
             pac_code = safe_b64decode(b64_data)
             match = re.search(r"var\s+proxy\s*=\s*['\"]([^'\"]+)['\"]", pac_code)
             if match:
                 return match.group(1)
-        except Exception:
-            pass
+
+            # 兜底：打印 PAC 片段方便排查
+            print(f"    [!] node {node_id}: 未匹配到 proxy 变量")
+            print(f"        PAC 片段: {pac_code[:300]}")
+        except Exception as e:
+            print(f"    [!] node {node_id}: 请求异常 {e}")
         return None
 
     def deduplicate(self, results):
         seen = {}
-        return [r for r in results if not (r['proxy'] in seen or seen.setdefault(r['proxy'], True))]
+        return [r for r in results
+                if not (r['proxy'] in seen or seen.setdefault(r['proxy'], True))]
 
     def parse_proxy(self, s):
-        s = s.replace('HTTPS ','').replace('HTTP ','').replace('https://','').replace('http://','')
+        s = (s.replace('HTTPS ', '').replace('HTTP ', '')
+               .replace('https://', '').replace('http://', ''))
         if ':' in s:
-            h, p = s.split(':',1)
+            h, p = s.split(':', 1)
             return h.strip(), int(p)
         return s.strip(), 443
 
-    def generate_full_clash_yaml(self, nodes):
-        # ==============================================
-        # 👇👇👇 这里 100% 完全照搬你给的完整配置 👇👇👇
-        # ==============================================
+    # ── 生成完整 YAML ──
+    def generate_full_clash_yaml(self, nodes: List[Dict]) -> str:
+        # 收集所有节点名，后面注入 proxy-groups
+        node_names = [f'"{n["name"]}"' for n in nodes]
+
         yaml = '''mixed-port: 7897
 allow-lan: true
 mode: rule
@@ -108,7 +139,7 @@ dns:
   nameserver: [180.76.76.76, 119.29.29.29, 180.184.1.1, 223.5.5.5, 8.8.8.8, "https://223.6.6.6/dns-query#h3=true", "https://dns.alidns.com/dns-query", "https://cloudflare-dns.com/dns-query", "https://doh.pub/dns-query"]
   fallback: ["https://000000.dns.nextdns.io/dns-query#h3=true", "https://dns.alidns.com/dns-query", "https://doh.pub/dns-query", "https://public.dns.iij.jp/dns-query", "https://101.101.101.101/dns-query", "https://208.67.220.220/dns-query", "tls://8.8.4.4", "tls://1.0.0.1:853", "https://cloudflare-dns.com/dns-query", "https://dns.google/dns-query"]
   fallback-filter: {geoip: true, ipcidr: [240.0.0.0/4, 0.0.0.0/32, 127.0.0.1/32], domain: ["+.google.com", "+.facebook.com", "+.twitter.com", "+.youtube.com", "+.xn--ngstr-lra8j.com", "+.google.cn", "+.googleapis.cn", "+.googleapis.com", "+.gvt1.com"]}
-  fake-ip-filter: ["*.lan", "stun.*.*.*", "stun.*.*", time.windows.com, time.nist.gov, time.apple.com, time.asia.apple.com, "*.ntp.org.cn", "*.openwrt.pool.ntp.org", time1.cloud.tencent.com, time.ustc.edu.cn, pool.ntp.org, ntp.ubuntu.com, ntp.aliyun.com, ntp1.aliyun.com, ntp2.aliyun.com, ntp3.aliyun.com, ntp4.aliyun.com, ntp5.aliyun.com, ntp6.aliyun.com, ntp7.aliyun.com, time1.aliyun.com, time2.aliyun.com, time3.aliyun.com, time4.aliyun.com, time5.aliyun.com, time6.aliyun.com, time7.aliyun.com, "*.time.edu.cn", time1.apple.com, time2.apple.com, time3.apple.com, time4.apple.com, time5.apple.com, time6.apple.com, time7.apple.com, time1.google.com, time2.google.com, time3.google.com, time4.google.com, music.163.com, "*.music.163.com", "*.126.net", musicapi.taihe.com, music.taihe.com, songsearch.kugou.com, trackercdn.kugou.com, "*.kuwo.cn", api-jooxtt.sanook.com, api.joox.com, joox.com, y.qq.com, "*.y.qq.com", streamoc.music.tc.qq.com, mobileoc.music.tc.qq.com, isure.stream.qqmusic.qq.com, dl.stream.qqmusic.qq.com, aqqmusic.tc.qq.com, amobile.music.tc.qq.com, "*.xiami.com", "*.music.migu.cn", music.migu.cn, "*.msftconnecttest.com", "*.msftncsi.com", localhost.ptlogin2.qq.com, "*.*.*.srv.nintendo.net", "*.*.stun.playstation.net", "xbox.*.*.microsoft.com", "*.ipv6.microsoft.com", "*.*.xboxlive.com", speedtest.cros.wr.pvp.net"]
+  fake-ip-filter: ["*.lan", "stun.*.*.*", "stun.*.*", time.windows.com, time.nist.gov, time.apple.com, time.asia.apple.com, "*.ntp.org.cn", "*.openwrt.pool.ntp.org", time1.cloud.tencent.com, time.ustc.edu.cn, pool.ntp.org, ntp.ubuntu.com, ntp.aliyun.com, ntp1.aliyun.com, ntp2.aliyun.com, ntp3.aliyun.com, ntp4.aliyun.com, ntp5.aliyun.com, ntp6.aliyun.com, ntp7.aliyun.com, time1.aliyun.com, time2.aliyun.com, time3.aliyun.com, time4.aliyun.com, time5.aliyun.com, time6.aliyun.com, time7.aliyun.com, "*.time.edu.cn", time1.apple.com, time2.apple.com, time3.apple.com, time4.apple.com, time5.apple.com, time6.apple.com, time7.apple.com, time1.google.com, time2.google.com, time3.google.com, time4.google.com, music.163.com, "*.music.163.com", "*.126.net", musicapi.taihe.com, music.taihe.com, songsearch.kugou.com, trackercdn.kugou.com, "*.kuwo.cn", api-jooxtt.sanook.com, api.joox.com, joox.com, y.qq.com, "*.y.qq.com", streamoc.music.tc.qq.com, mobileoc.music.tc.qq.com, isure.stream.qqmusic.qq.com, dl.stream.qqmusic.qq.com, aqqmusic.tc.qq.com, amobile.music.tc.qq.com, "*.xiami.com", "*.music.migu.cn", music.migu.cn, "*.msftconnecttest.com", "*.msftncsi.com", localhost.ptlogin2.qq.com, "*.*.*.srv.nintendo.net", "*.*.stun.playstation.net", "xbox.*.*.microsoft.com", "*.ipv6.microsoft.com", "*.*.xboxlive.com", speedtest.cros.wr.pvp.net]
 profile:
   store-selected: true
   store-fake-ip: false
@@ -131,24 +162,23 @@ geox-url:
 
 proxies:
 '''
-
-        # 插入自动抓取的节点
+        # ── 插入节点 ──
         for node in nodes:
             name = node['name']
             host, port = self.parse_proxy(node['proxy'])
             yaml += f'  - {{name: "{name}", type: http, server: {host}, port: {port}, tls: true}}\n'
 
-        # ==============================================
-        # 👇👇👇 以下完全照搬你给的 proxy-groups + rule-providers + rules 👇👇👇
-        # ==============================================
-        yaml += '''
+        # ── 节点列表字符串（注入 proxy-groups）──
+        node_list_str = ', '.join(node_names)
+
+        yaml += f'''
 proxy-groups:
   - name: "🚀 节点选择"
     type: select
-    proxies: ["⚡ 自动选择", DIRECT, REJECT]
+    proxies: ["⚡ 自动选择", {node_list_str}, DIRECT, REJECT]
   - name: "⚡ 自动选择"
     type: url-test
-    proxies: []
+    proxies: [{node_list_str}]
     url: "https://www.gstatic.com/generate_204"
     interval: 300
     lazy: false
@@ -245,8 +275,9 @@ proxy-groups:
   - name: "🐟 漏网之鱼"
     type: select
     proxies: ["🚀 节点选择", "⚡ 自动选择", DIRECT, REJECT]
-
-rule-providers:
+'''
+        # ── rule-providers（原样保留）──
+        yaml += '''rule-providers:
   category-ads-all: {type: http, behavior: domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ads-all.mrs", path: ./ruleset/category-ads-all.mrs, interval: 86400, format: mrs}
   private: {type: http, behavior: domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs", path: ./ruleset/private.mrs, interval: 86400, format: mrs}
   private-ip: {type: http, behavior: ipcidr, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs", path: ./ruleset/private-ip.mrs, interval: 86400, format: mrs}
@@ -446,24 +477,32 @@ rules:
         results = []
         print("\n[2/3] 获取代理地址...")
         for i, node in enumerate(nodes, 1):
-            print(f" {i}/{len(nodes)} {node['name']}")
+            print(f"  {i}/{len(nodes)} {node['name']}")
             proxy = self.get_proxy_for_node(node['id'])
             if proxy:
                 results.append({"name": node["name"], "proxy": proxy})
+                print(f"    ✓ {proxy}")
+            else:
+                print(f"    ✗ 失败")
             time.sleep(0.8)
 
         valid = self.deduplicate(results)
+
+        if not valid:
+            print("\n[!] 所有节点均获取失败，不生成配置")
+            return
+
+        print(f"\n[3/3] 生成 YAML（{len(valid)} 个有效节点）...")
         yaml_content = self.generate_full_clash_yaml(valid)
 
         os.makedirs(EXPORT_DIR, exist_ok=True)
         yaml_path = os.path.join(EXPORT_DIR, "config.yaml")
-
         with open(yaml_path, "w", encoding="utf-8") as f:
             f.write(yaml_content)
 
-        print("\n✅ 生成完成！纯YAML文件：")
-        print(yaml_path)
+        print(f"\n✅ 生成完成：{yaml_path}")
         print(f"✅ 有效节点：{len(valid)} 个")
+
 
 if __name__ == "__main__":
     AllNodesFetcher().run()
