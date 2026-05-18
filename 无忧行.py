@@ -170,21 +170,21 @@ geox-url:
 
 proxies:
 '''
-        # ── 插入节点 ──
+        # ── 插入节点（用普通字符串拼接，不含花括号冲突）──
         for node in nodes:
             name = node['name']
             host, port = self.parse_proxy(node['proxy'])
-            yaml += f'  - {{name: "{name}", type: http, server: {host}, port: {port}, tls: true}}\n'
+            yaml += '  - {name: "' + name + '", type: http, server: ' + host + ', port: ' + str(port) + ', tls: true}\n'
 
-        # ── proxy-groups ──
-        yaml += f'''
+        # ── proxy-groups（用 %s 替代 f-string）──
+        yaml += '''
 proxy-groups:
   - name: "🚀 节点选择"
     type: select
-    proxies: ["⚡ 自动选择", {node_list_str}, DIRECT, REJECT]
+    proxies: ["⚡ 自动选择", %s, DIRECT, REJECT]
   - name: "⚡ 自动选择"
     type: url-test
-    proxies: [{node_list_str}]
+    proxies: [%s]
     url: "https://www.gstatic.com/generate_204"
     interval: 300
     lazy: false
@@ -281,8 +281,10 @@ proxy-groups:
   - name: "🐟 漏网之鱼"
     type: select
     proxies: ["🚀 节点选择", "⚡ 自动选择", DIRECT, REJECT]
+''' % (node_list_str, node_list_str)
 
-rule-providers:
+        # ── rule-providers（纯普通字符串，零花括号冲突）──
+        yaml += """rule-providers:
   category-ads-all: {type: http, behavior: domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ads-all.mrs", path: ./ruleset/category-ads-all.mrs, interval: 86400, format: mrs}
   private: {type: http, behavior: domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/private.mrs", path: ./ruleset/private.mrs, interval: 86400, format: mrs}
   private-ip: {type: http, behavior: ipcidr, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs", path: ./ruleset/private-ip.mrs, interval: 86400, format: mrs}
@@ -470,7 +472,7 @@ rules:
   - RULE-SET,geolocation-!cn,🌍 非中国
   - RULE-SET,cn,🔒 国内服务
   - MATCH,🐟 漏网之鱼
-'''
+"""
         return yaml
 
     def run(self):
