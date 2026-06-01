@@ -37,58 +37,57 @@ geox-url:
   asn: https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb
 
 proxies:
-  - {name: "Auto Select - US, San Jose", type: http, server: 750cc89a-tg1400-twm6ew-dfj4.mi-imgs.com, port: 443, tls: true}
-  - {name: "HK, Hongkong Ultra", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6443, tls: true}
-  - {name: "SG, Singapore Pro+[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 5501, tls: true}
-  - {name: "MY, Kuala Lumpur Pro+[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 5509, tls: true}
-  - {name: "JP, Tokoyo Pro+[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 5502, tls: true}
-  - {name: "US, San Jose Pro+[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6510, tls: true}
-  - {name: "KR, Seoul Pro+[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 5503, tls: true}
-  - {name: "US, Residential ISP", type: http, server: f8664aa4-tg1400-twm6ew-dfj4.fmtdc1ext.sghuawei.com, port: 5443, tls: true}
-  - {name: "US, Seattle[AI]", type: http, server: 5be947ce-tg1400-twm6ew-dfj4.6mar2026.cdntoutiao.com, port: 443, tls: true}
-  - {name: "US, Los Angeles", type: http, server: 4a7fe927-tg0hs0-twlk6w-dfj4.6mar2026.eumiui.com, port: 443, tls: true}
-  - {name: "US, Los Angeles 2", type: http, server: 833d1a1a-tg1400-twm6ew-dfj4.laxdc2.eumiui.com, port: 443, tls: true}
-  - {name: "US, San Jose", type: http, server: f8664aa4-tg1400-twm6ew-dfj4.fmtdc1ext.sghuawei.com, port: 443, tls: true}
-  - {name: "US, Seattle 3[AI]", type: http, server: 5be947ce-tg1400-twm6ew-dfj4.6mar2026.cdntoutiao.com, port: 2445, tls: true}
-  - {name: "US, San Francisco[AI]", type: http, server: 48ef41ad-tg0hs0-twlk6w-dfj4.fmt7mar2026.cdntoutiao.com, port: 443, tls: true}
-  - {name: "HK, Hong Kong", type: http, server: 1b775f63-tg0hs0-twlk6w-dfj4.hkt.s1xiaomiev.com, port: 443, tls: true}
-  - {name: "HK, Hong Kong 2", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6443, tls: true}
-  - {name: "HK, Hong Kong 3", type: http, server: 750cc89a-tg1400-twm6ew-dfj4.mi-imgs.com, port: 443, tls: true}
-  - {name: "TW, Taichung", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6179, tls: true}
-  - {name: "SG, Singapore[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6118, tls: true}
-  - {name: "SG, Singapore 2[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6181, tls: true}
-  - {name: "JP, Tokoyo[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6182, tls: true}
-  - {name: "JP, Tokoyo 2[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6192, tls: true}
-  - {name: "ID, Jakarta[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6187, tls: true}
-  - {name: "AU, Sydney[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1688, tls: true}
-  - {name: "KR, Seoul[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1681, tls: true}
-  - {name: "NL, Amsterdam[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1692, tls: true}
-  - {name: "CA, Toronto[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1691, tls: true}
-  - {name: "IT, Milan[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1695, tls: true}
-  - {name: "FR, Paris[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1685, tls: true}
-  - {name: "AE, Dubai", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1704, tls: true}
-  - {name: "DE, Frankfurt", type: http, server: 2210f09f-tg0hs0-twlk6w-dfj4.nubfra.ukuaishou.com, port: 443, tls: true}
-  - {name: "GB, London[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1682, tls: true}
-  - {name: "SG, Singapore Lite[AI]", type: http, server: 1c3f0525-tg1400-twm6ew-dfj4.lite-nubesin.ukuaishou.com, port: 443, tls: true}
-  - {name: "RU, Moscow", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6185, tls: true}
-  - {name: "PK, Karachi", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6191, tls: true}
-  - {name: "TR, Istanbul", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6186, tls: true}
-  - {name: "BR, Sao Paulo[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1696, tls: true}
-  - {name: "IN, Mumbai[AI]", type: http, server: 98f3dddc-tg0hs0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1686, tls: true}
-  - {name: "JP, Tokyo Lite", type: http, server: fcd2a8e4-tg1400-twm6ew-dfj4.lite-nubetko.ukuaishou.com, port: 443, tls: true}
-  - {name: "MX, Mexico City[AI]", type: http, server: 6e7fe642-tg0hs0-twlk6w-dfj4.6mar2026.cdntoutiao.com, port: 5678, tls: true}
-  - {name: "ZA, Johannesburg[AI]", type: http, server: 66f6aab6-tg1400-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1703, tls: true}
-  - {name: "DE, Nuremberg Lite[AI]", type: http, server: 955a3427-tg0hs0-twlk6w-dfj4.lite-nuremberg.ukuaishou.com, port: 443, tls: true}
-  - {name: "FI, Helsinki[FREE已被墙]", type: http, server: 11e6ec0a-tg0hs0-twlk6w-dfj4.hel1-dc2.ukuaishou.com, port: 443, tls: true}
-  - {name: "DE, Nuremberg[FREE已被墙]", type: http, server: ac112d4d-tg1400-twm6ew-dfj4.nbg1-dc4.ukuaishou.com, port: 443, tls: true}
+  - {name: "Auto Select - US, San Jose", type: http, server: fe4e5cea-tg2yo0-twm6ew-dfj4.mi-imgs.com, port: 443, tls: true}
+  - {name: "HK, Hongkong Ultra", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6443, tls: true}
+  - {name: "SG, Singapore Pro+[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 5501, tls: true}
+  - {name: "MY, Kuala Lumpur Pro+[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 5509, tls: true}
+  - {name: "JP, Tokoyo Pro+[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 5502, tls: true}
+  - {name: "US, San Jose Pro+[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6510, tls: true}
+  - {name: "KR, Seoul Pro+[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 5503, tls: true}
+  - {name: "US, Residential ISP", type: http, server: a7dd5ca1-tg2cg0-twlk6w-dfj4.fmtdc1ext.sghuawei.com, port: 5443, tls: true}
+  - {name: "US, Seattle[AI]", type: http, server: e2614294-tg2yo0-twm6ew-dfj4.6mar2026.cdntoutiao.com, port: 443, tls: true}
+  - {name: "US, Los Angeles", type: http, server: ad2a58e9-tg2yo0-twm6ew-dfj4.6mar2026.eumiui.com, port: 443, tls: true}
+  - {name: "US, Los Angeles 2", type: http, server: 2ebda1ab-tg2yo0-twm6ew-dfj4.laxdc2.eumiui.com, port: 443, tls: true}
+  - {name: "US, San Jose", type: http, server: 82dcc35f-tg2yo0-twm6ew-dfj4.fmtdc1ext.sghuawei.com, port: 443, tls: true}
+  - {name: "US, Seattle 3[AI]", type: http, server: e2614294-tg2yo0-twm6ew-dfj4.6mar2026.cdntoutiao.com, port: 2445, tls: true}
+  - {name: "US, San Francisco[AI]", type: http, server: 64cfa61a-tg2yo0-twm6ew-dfj4.fmt7mar2026.cdntoutiao.com, port: 443, tls: true}
+  - {name: "HK, Hong Kong", type: http, server: 0ddbb888-tg2yo0-twm6ew-dfj4.hkt.s1xiaomiev.com, port: 443, tls: true}
+  - {name: "HK, Hong Kong 3", type: http, server: fe4e5cea-tg2yo0-twm6ew-dfj4.mi-imgs.com, port: 443, tls: true}
+  - {name: "TW, Taichung", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6179, tls: true}
+  - {name: "SG, Singapore[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6118, tls: true}
+  - {name: "SG, Singapore 2[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6181, tls: true}
+  - {name: "JP, Tokoyo[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6182, tls: true}
+  - {name: "JP, Tokoyo 2[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6192, tls: true}
+  - {name: "ID, Jakarta[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6187, tls: true}
+  - {name: "AU, Sydney[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1688, tls: true}
+  - {name: "KR, Seoul[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1681, tls: true}
+  - {name: "NL, Amsterdam[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1692, tls: true}
+  - {name: "CA, Toronto[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1691, tls: true}
+  - {name: "IT, Milan[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1695, tls: true}
+  - {name: "FR, Paris[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1685, tls: true}
+  - {name: "AE, Dubai", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1704, tls: true}
+  - {name: "DE, Frankfurt", type: http, server: cb3e69f7-tg2cg0-twlk6w-dfj4.nubfra.ukuaishou.com, port: 443, tls: true}
+  - {name: "GB, London[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1682, tls: true}
+  - {name: "SG, Singapore Lite[AI]", type: http, server: 4377685d-tg2cg0-twlk6w-dfj4.lite-nubesin.ukuaishou.com, port: 443, tls: true}
+  - {name: "RU, Moscow", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6185, tls: true}
+  - {name: "PK, Karachi", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 6191, tls: true}
+  - {name: "TR, Istanbul", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 6186, tls: true}
+  - {name: "BR, Sao Paulo[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1696, tls: true}
+  - {name: "IN, Mumbai[AI]", type: http, server: efb2bf18-tg2yo0-twm6ew-dfj4.fourtwo.fhuawei.com, port: 1686, tls: true}
+  - {name: "JP, Tokyo Lite", type: http, server: 7d6578db-tg2cg0-twlk6w-dfj4.lite-nubetko.ukuaishou.com, port: 443, tls: true}
+  - {name: "MX, Mexico City[AI]", type: http, server: 39fb64af-tg2cg0-twlk6w-dfj4.6mar2026.cdntoutiao.com, port: 5678, tls: true}
+  - {name: "ZA, Johannesburg[AI]", type: http, server: fde18a52-tg2cg0-twlk6w-dfj4.fourtwo.fhuawei.com, port: 1703, tls: true}
+  - {name: "DE, Nuremberg Lite[AI]", type: http, server: 02d5b234-tg2yo0-twm6ew-dfj4.lite-nuremberg.ukuaishou.com, port: 443, tls: true}
+  - {name: "FI, Helsinki[FREE已被墙]", type: http, server: 52817d78-tg2cg0-twlk6w-dfj4.hel1-dc2.ukuaishou.com, port: 443, tls: true}
+  - {name: "DE, Nuremberg[FREE已被墙]", type: http, server: 8b5b7480-tg2yo0-twm6ew-dfj4.nbg1-dc4.ukuaishou.com, port: 443, tls: true}
 
 proxy-groups:
   - name: "🚀 节点选择"
     type: select
-    proxies: ["⚡ 自动选择", "Auto Select - US, San Jose", "HK, Hongkong Ultra", "SG, Singapore Pro+[AI]", "MY, Kuala Lumpur Pro+[AI]", "JP, Tokoyo Pro+[AI]", "US, San Jose Pro+[AI]", "KR, Seoul Pro+[AI]", "US, Residential ISP", "US, Seattle[AI]", "US, Los Angeles", "US, Los Angeles 2", "US, San Jose", "US, Seattle 3[AI]", "US, San Francisco[AI]", "HK, Hong Kong", "HK, Hong Kong 2", "HK, Hong Kong 3", "TW, Taichung", "SG, Singapore[AI]", "SG, Singapore 2[AI]", "JP, Tokoyo[AI]", "JP, Tokoyo 2[AI]", "ID, Jakarta[AI]", "AU, Sydney[AI]", "KR, Seoul[AI]", "NL, Amsterdam[AI]", "CA, Toronto[AI]", "IT, Milan[AI]", "FR, Paris[AI]", "AE, Dubai", "DE, Frankfurt", "GB, London[AI]", "SG, Singapore Lite[AI]", "RU, Moscow", "PK, Karachi", "TR, Istanbul", "BR, Sao Paulo[AI]", "IN, Mumbai[AI]", "JP, Tokyo Lite", "MX, Mexico City[AI]", "ZA, Johannesburg[AI]", "DE, Nuremberg Lite[AI]", "FI, Helsinki[FREE已被墙]", "DE, Nuremberg[FREE已被墙]", DIRECT, REJECT]
+    proxies: ["⚡ 自动选择", "Auto Select - US, San Jose", "HK, Hongkong Ultra", "SG, Singapore Pro+[AI]", "MY, Kuala Lumpur Pro+[AI]", "JP, Tokoyo Pro+[AI]", "US, San Jose Pro+[AI]", "KR, Seoul Pro+[AI]", "US, Residential ISP", "US, Seattle[AI]", "US, Los Angeles", "US, Los Angeles 2", "US, San Jose", "US, Seattle 3[AI]", "US, San Francisco[AI]", "HK, Hong Kong", "HK, Hong Kong 3", "TW, Taichung", "SG, Singapore[AI]", "SG, Singapore 2[AI]", "JP, Tokoyo[AI]", "JP, Tokoyo 2[AI]", "ID, Jakarta[AI]", "AU, Sydney[AI]", "KR, Seoul[AI]", "NL, Amsterdam[AI]", "CA, Toronto[AI]", "IT, Milan[AI]", "FR, Paris[AI]", "AE, Dubai", "DE, Frankfurt", "GB, London[AI]", "SG, Singapore Lite[AI]", "RU, Moscow", "PK, Karachi", "TR, Istanbul", "BR, Sao Paulo[AI]", "IN, Mumbai[AI]", "JP, Tokyo Lite", "MX, Mexico City[AI]", "ZA, Johannesburg[AI]", "DE, Nuremberg Lite[AI]", "FI, Helsinki[FREE已被墙]", "DE, Nuremberg[FREE已被墙]", DIRECT, REJECT]
   - name: "⚡ 自动选择"
     type: url-test
-    proxies: ["Auto Select - US, San Jose", "HK, Hongkong Ultra", "SG, Singapore Pro+[AI]", "MY, Kuala Lumpur Pro+[AI]", "JP, Tokoyo Pro+[AI]", "US, San Jose Pro+[AI]", "KR, Seoul Pro+[AI]", "US, Residential ISP", "US, Seattle[AI]", "US, Los Angeles", "US, Los Angeles 2", "US, San Jose", "US, Seattle 3[AI]", "US, San Francisco[AI]", "HK, Hong Kong", "HK, Hong Kong 2", "HK, Hong Kong 3", "TW, Taichung", "SG, Singapore[AI]", "SG, Singapore 2[AI]", "JP, Tokoyo[AI]", "JP, Tokoyo 2[AI]", "ID, Jakarta[AI]", "AU, Sydney[AI]", "KR, Seoul[AI]", "NL, Amsterdam[AI]", "CA, Toronto[AI]", "IT, Milan[AI]", "FR, Paris[AI]", "AE, Dubai", "DE, Frankfurt", "GB, London[AI]", "SG, Singapore Lite[AI]", "RU, Moscow", "PK, Karachi", "TR, Istanbul", "BR, Sao Paulo[AI]", "IN, Mumbai[AI]", "JP, Tokyo Lite", "MX, Mexico City[AI]", "ZA, Johannesburg[AI]", "DE, Nuremberg Lite[AI]", "FI, Helsinki[FREE已被墙]", "DE, Nuremberg[FREE已被墙]"]
+    proxies: ["Auto Select - US, San Jose", "HK, Hongkong Ultra", "SG, Singapore Pro+[AI]", "MY, Kuala Lumpur Pro+[AI]", "JP, Tokoyo Pro+[AI]", "US, San Jose Pro+[AI]", "KR, Seoul Pro+[AI]", "US, Residential ISP", "US, Seattle[AI]", "US, Los Angeles", "US, Los Angeles 2", "US, San Jose", "US, Seattle 3[AI]", "US, San Francisco[AI]", "HK, Hong Kong", "HK, Hong Kong 3", "TW, Taichung", "SG, Singapore[AI]", "SG, Singapore 2[AI]", "JP, Tokoyo[AI]", "JP, Tokoyo 2[AI]", "ID, Jakarta[AI]", "AU, Sydney[AI]", "KR, Seoul[AI]", "NL, Amsterdam[AI]", "CA, Toronto[AI]", "IT, Milan[AI]", "FR, Paris[AI]", "AE, Dubai", "DE, Frankfurt", "GB, London[AI]", "SG, Singapore Lite[AI]", "RU, Moscow", "PK, Karachi", "TR, Istanbul", "BR, Sao Paulo[AI]", "IN, Mumbai[AI]", "JP, Tokyo Lite", "MX, Mexico City[AI]", "ZA, Johannesburg[AI]", "DE, Nuremberg Lite[AI]", "FI, Helsinki[FREE已被墙]", "DE, Nuremberg[FREE已被墙]"]
     url: "https://www.gstatic.com/generate_204"
     interval: 300
     lazy: false
