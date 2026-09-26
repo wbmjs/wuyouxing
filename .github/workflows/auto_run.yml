@@ -4,6 +4,11 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+# 避免上一次运行尚未结束时重复触发，导致 push 冲突
+concurrency:
+  group: auto-update-config
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,17 +24,49 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 安装依赖
-        run: pip install requests
+        run: pip install -r requirements.txt
 
+      # 脚本在抓取失败时会以非 0 退出码结束，后面的步骤不会执行
       - name: 运行脚本
         run: python 无忧行.py
+
+      # 双保险：即使脚本被改动，也不允许把空配置写进仓库
+      - name: 校验生成的配置
+        run: |
+          if [ ! -s /tmp/config.yaml ]; then
+            echo "::error::未生成 /tmp/config.yaml，终止提交，仓库保留上一个有效配置"
+            exit 1
+          fi
+          # GNU grep 的 BRE 中 { 为字面量，无需转义（转义反而报 Unmatched \{）
+          node_count=$(grep -c '^  - {name: ' /tmp/config.yaml || true)
+          echo "有效节点数：$node_count"
+          if [ "$node_count" -eq 0 ]; then
+            echo "::error::生成的配置中没有任何节点，终止提交，仓库保留上一个有效配置"
+            exit 1
+          fi
 
       - name: 复制结果到仓库
         run: |
           cp /tmp/config.yaml config.yaml
 
+      # date 必须在 shell 里执行，再通过 GITHUB_ENV 传给 commit message
+      - name: 记录提交时间
+        run: echo "COMMIT_TIME=$(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> "$GITHUB_ENV"
+
+      - name: 检查是否有变更
+        id: changes
+        run: |
+          if git diff --quiet -- config.yaml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "配置内容无变化，跳过提交"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "配置内容有变化，准备提交"
+          fi
+
       - name: 提交并推送
+        if: steps.changes.outputs.changed == 'true'
         uses: EndBug/add-and-commit@v9
         with:
-          message: "自动更新配置 $(date '+%Y-%m-%d %H:%M:%S')"
+          message: "自动更新配置 ${{ env.COMMIT_TIME }}"
           add: "config.yaml"
