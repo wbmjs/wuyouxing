@@ -7,11 +7,25 @@ import os
 import re
 import json
 import base64
+import sys
 import requests
 import time
 from typing import Dict, List, Optional
 
 EXPORT_DIR = "/tmp"
+
+# 接口参数：厂商改版时可用同名环境变量覆盖，无需改代码
+API_VERSION = os.getenv("WYH_API_VERSION", "1.3.23")
+PROXY_MODE = os.getenv("WYH_PROXY_MODE", "5")
+LIST_PROXY_ID = os.getenv("WYH_LIST_PROXY_ID", "8")
+RETRY_DELAY = 1.5
+
+
+def yaml_escape(text: str) -> str:
+    """节点名会同时出现在流式映射和策略组列表里，必须转义成安全的双引号标量。"""
+    cleaned = re.sub(r'[\x00-\x1f\x7f]', ' ', str(text))
+    cleaned = cleaned.replace('\\', '\\\\').replace('"', '\\"')
+    return cleaned.strip()
 
 
 def safe_b64decode(b64_str: str) -> str:
@@ -24,8 +38,9 @@ def safe_b64decode(b64_str: str) -> str:
 
 class AllNodesFetcher:
     def __init__(self):
-        self.token = os.getenv("WYH_TOKEN", "")
-        self.base_url = os.getenv("WYH_BASE_URL", "")
+        self.token = (os.getenv("WYH_TOKEN") or "").strip()
+        self.base_url = (os.getenv("WYH_BASE_URL") or "").strip().rstrip('/')
+        self._validate_env()
 
         self.session = requests.Session()
         self.session.headers.update({
@@ -35,6 +50,41 @@ class AllNodesFetcher:
             'Pac-Encode': 'base64',
         })
 
+    # ── 友好退出：统一打印可读原因并以非 0 退出码终止 ──
+    @staticmethod
+    def _fail(message: str):
+        print(f"\n❌ {message}")
+        sys.exit(1)
+
+    # ── 启动即校验环境变量，避免用空 URL 发出无意义的请求 ──
+    def _validate_env(self):
+        missing = [name for name, value in (("WYH_TOKEN", self.token),
+                                            ("WYH_BASE_URL", self.base_url))
+                   if not value]
+        if missing:
+            self._fail(
+                "缺少环境变量：" + "、".join(missing) + "\n"
+                "  · GitHub Actions：在仓库 Settings → Secrets and variables → "
+                "Actions 中添加同名 Secret\n"
+                "  · 本地运行：export WYH_TOKEN=… WYH_BASE_URL=https://…"
+            )
+        if not self.base_url.startswith(('http://', 'https://')):
+            self._fail(
+                f"WYH_BASE_URL 格式不正确：{self.base_url!r}，"
+                "应以 http:// 或 https:// 开头，例如 https://example.com"
+            )
+
+    # ── 清理上一次运行可能残留的输出，避免失败时被误当成新配置提交 ──
+    @staticmethod
+    def _clear_stale_output():
+        path = os.path.join(EXPORT_DIR, "config.yaml")
+        if os.path.exists(path):
+            try:
+                os.remove(path)
+                print(f"[i] 已清理残留文件 {path}")
+            except OSError as e:
+                print(f"[!] 清理残留文件失败（忽略）：{e}")
+
     def _refresh_token(self, raw: dict):
         new_token = raw.get('session', {}).get('token')
         if new_token and new_token != self.token:
@@ -42,38 +92,93 @@ class AllNodesFetcher:
             self.token = new_token
             self.session.headers['token'] = self.token
 
+    def _post(self, url, params, data, timeout, label, retries=0):
+        """带重试的 POST；HTTP 错误直接抛出（重试也不会变好）。"""
+        last = None
+        for attempt in range(retries + 1):
+            try:
+                resp = self.session.post(url, params=params, data=data, timeout=timeout)
+                resp.raise_for_status()
+                return resp
+            except requests.HTTPError:
+                raise
+            except requests.RequestException as e:
+                last = e
+                if attempt < retries:
+                    wait = RETRY_DELAY * (attempt + 1)
+                    print(f"    [!] {label} 请求失败（{type(e).__name__}），"
+                          f"{wait:.1f}s 后重试 {attempt + 1}/{retries}")
+                    time.sleep(wait)
+        raise last
+
     def get_node_list(self) -> List[Dict]:
         print("[1/3] 获取节点列表...")
         url = f"{self.base_url}/chrome/popup"
-        params = {'token': self.token, 'lang': 'zh-CN', 'version': '1.3.23'}
-        data = {'proxy_mode': '5', 'proxy_id': '8'}
+        params = {'token': self.token, 'lang': 'zh-CN', 'version': API_VERSION}
+        data = {'proxy_mode': PROXY_MODE, 'proxy_id': LIST_PROXY_ID}
 
-        resp = self.session.post(url, params=params, data=data, timeout=15)
-        raw = resp.json()
+        try:
+            resp = self._post(url, params, data, 15, "节点列表", retries=2)
+            raw = resp.json()
+        except requests.HTTPError as e:
+            status = getattr(getattr(e, 'response', None), 'status_code', '未知')
+            self._fail(
+                f"接口返回 HTTP {status}，请检查 WYH_TOKEN 是否有效、"
+                "WYH_BASE_URL 是否正确（token 过期是最常见原因）"
+            )
+        except requests.RequestException as e:
+            self._fail(
+                f"请求节点列表失败：{e}\n"
+                "  · 请检查网络连通性，以及 WYH_BASE_URL 是否可访问"
+            )
+        except ValueError:
+            body = getattr(resp, 'text', '') or ''
+            self._fail(
+                "接口返回的不是合法 JSON（token 失效时通常被重定向到登录页）\n"
+                f"  · 响应片段：{body[:200]}"
+            )
+
+        if not isinstance(raw, dict):
+            self._fail(f"接口返回了意外的 JSON 类型：{type(raw).__name__}")
         self._refresh_token(raw)
 
-        html = raw.get('html', {}).get('body', '')
+        html = (raw.get('html') or {}).get('body', '')
+        if not html:
+            self._fail(
+                "接口未返回节点列表 HTML（html.body 为空）\n"
+                "  · 请检查 WYH_TOKEN 是否有效，或机场是否改动了接口"
+            )
         nodes = []
-        pattern = r'<option\s+value="(\d+)"(?:\s+selected)?>(.*?)</option>'
-        matches = re.findall(pattern, html, re.DOTALL)
+        # 属性顺序、单双引号都交给正则容忍，避免厂商改一下 HTML 就全军覆没
+        option_re = re.compile(r'<option\b([^>]*)>(.*?)</option>', re.DOTALL | re.IGNORECASE)
+        value_re = re.compile(r'value\s*=\s*["\']?(\d+)', re.IGNORECASE)
 
-        for node_id, raw_text in matches:
+        for attrs, raw_text in option_re.findall(html):
+            value_match = value_re.search(attrs)
+            if not value_match:
+                continue
             text = re.sub(r'<[^>]+>', '', raw_text).strip()
             if '自动选择' in text:
                 continue
-            clean = re.sub(r'[\U0001f300-\U0001f9ff]', '', text)
-            clean = re.sub(r'$$.*?$$', '', clean).strip()
-            nodes.append({'id': node_id, 'name': clean})
+            # 国旗(U+1F1E6 起)不在 U+1F300 区间内，机场节点名里很常见，一并清掉
+            clean = re.sub(r'[\U0001F1E6-\U0001F1FF\U0001F300-\U0001FAFF'
+                           r'☀-➿⬀-⯿️‍]', '', text)
+            # 去掉 $$倍率$$ 与 $倍率$ 两种标记（长写法优先，否则只会剩四个美元符号）
+            clean = re.sub(r'\$\$.*?\$\$|\$.*?\$', '', clean)
+            clean = re.sub(r'\s+', ' ', clean).strip()
+            if not clean:
+                continue
+            nodes.append({'id': value_match.group(1), 'name': clean})
 
         print(f"  找到 {len(nodes)} 个节点")
         return nodes
 
     def get_proxy_for_node(self, node_id: str) -> Optional[str]:
         url = f"{self.base_url}/chrome/popup"
-        params = {'token': self.token, 'lang': 'zh-CN', 'version': '1.3.23'}
-        data = {'proxy_mode': '5', 'proxy_id': node_id}
+        params = {'token': self.token, 'lang': 'zh-CN', 'version': API_VERSION}
+        data = {'proxy_mode': PROXY_MODE, 'proxy_id': node_id}
         try:
-            resp = self.session.post(url, params=params, data=data, timeout=10)
+            resp = self._post(url, params, data, 10, f"node {node_id}", retries=1)
             raw = resp.json()
             self._refresh_token(raw)
 
@@ -107,27 +212,60 @@ class AllNodesFetcher:
                 unique.append(r)
         return unique
 
-    # ── 修复：解析单个 host:port ──
-    def parse_single_proxy(self, s: str):
-        """解析 'HTTPS host:port' 或 'host:port'"""
-        s = (s.strip()
-                .replace('HTTPS ', '')
-                .replace('HTTP ', '')
-                .replace('https://', '')
-                .replace('http://', ''))
-        if ':' in s:
-            h, p = s.rsplit(':', 1)
-            return h.strip(), int(p)
-        return s.strip(), 443
+    # ── 拆分 'HTTPS host:port' → (host:port, 是否 TLS) ──
+    @staticmethod
+    def _split_scheme(s: str):
+        s = s.strip()
+        low = s.lower()
+        for scheme in ('https://', 'http://'):
+            if low.startswith(scheme):
+                return s[len(scheme):], scheme == 'https://'
+        for scheme in ('HTTPS ', 'HTTP '):
+            if s.upper().startswith(scheme):
+                return s[len(scheme):], scheme == 'HTTPS '
+        # PAC 里没标协议时按 HTTPS 处理（与历史行为一致）
+        return s, True
 
-    # ── 修复：处理分号分隔的多服务器 ──
-    def parse_proxy(self, s: str):
-        """返回第一个可用的 (host, port)"""
-        parts = [p.strip() for p in s.split(';') if p.strip()]
-        return self.parse_single_proxy(parts[0])
+    @staticmethod
+    def _parse_host_port(body: str):
+        if ':' in body:
+            host, _, port = body.rpartition(':')
+            host, port = host.strip(), port.strip()
+            if port.isdigit():
+                return host, int(port)
+        return body.strip(), 443
+
+    def parse_proxy_entries(self, name: str, raw: str) -> List[Dict]:
+        """把 PAC 里的 'HTTPS a:1;b:2' 拆成多个节点，协议决定 tls。"""
+        entries, seen = [], set()
+        for part in raw.split(';'):
+            if not part.strip():
+                continue
+            body, tls = self._split_scheme(part)
+            host, port = self._parse_host_port(body)
+            if not host or (host, port) in seen:
+                continue
+            seen.add((host, port))
+            entries.append({'name': name, 'server': host, 'port': port, 'tls': tls})
+        return entries
+
+    @staticmethod
+    def assign_unique_names(entries: List[Dict]) -> List[Dict]:
+        """Clash 要求节点名唯一，重名（含同节点的多服务器）自动加序号。"""
+        used = set()
+        for entry in entries:
+            candidate = entry['name']
+            if candidate in used:
+                n = 2
+                while f"{candidate} {n}" in used:
+                    n += 1
+                candidate = f"{candidate} {n}"
+            entry['name'] = candidate
+            used.add(candidate)
+        return entries
 
     def generate_full_clash_yaml(self, nodes: List[Dict]) -> str:
-        node_names = [f'"{n["name"]}"' for n in nodes]
+        node_names = [f'"{yaml_escape(n["name"])}"' for n in nodes]
         node_list_str = ', '.join(node_names)
 
         yaml = '''mixed-port: 7897
@@ -172,9 +310,9 @@ proxies:
 '''
         # ── 插入节点（用普通字符串拼接，不含花括号冲突）──
         for node in nodes:
-            name = node['name']
-            host, port = self.parse_proxy(node['proxy'])
-            yaml += '  - {name: "' + name + '", type: http, server: ' + host + ', port: ' + str(port) + ', tls: true}\n'
+            yaml += ('  - {name: "%s", type: http, server: %s, port: %d, tls: %s}\n'
+                     % (yaml_escape(node['name']), node['server'], node['port'],
+                        'true' if node['tls'] else 'false'))
 
         # ── proxy-groups（用 %s 替代 f-string）──
         yaml += '''
@@ -410,7 +548,7 @@ rules:
   - RULE-SET,atlassian,🐱 代码托管
   - RULE-SET,microsoft,Ⓜ️ 微软服务
   - RULE-SET,onedrive,Ⓜ️ 微软服务
-  - RULE-SET,apple-tvplus,📺 欧美流媒体
+  - RULE-SET,apple-tvplus,🍏 苹果服务
   - RULE-SET,apple,🍏 苹果服务
   - RULE-SET,icloud,🍏 苹果服务
   - RULE-SET,twitter,🐦 推特/X
@@ -476,39 +614,52 @@ rules:
         return yaml
 
     def run(self):
+        self._clear_stale_output()
         nodes = self.get_node_list()
 
-        valid = []
-        if nodes:
-            results = []
-            print("\n[2/3] 获取代理地址...")
-            for i, node in enumerate(nodes, 1):
-                print(f"  {i}/{len(nodes)} {node['name']}")
-                proxy = self.get_proxy_for_node(node['id'])
-                if proxy:
-                    results.append({"name": node["name"], "proxy": proxy})
-                    print(f"    ✓ {proxy[:80]}...")
-                else:
-                    print(f"    ✗ 失败")
-                time.sleep(0.8)
-            valid = self.deduplicate(results)
-        else:
-            print("[!] 未获取到节点列表，将生成空配置")
+        if not nodes:
+            self._fail("未解析到任何节点，已终止。"
+                       "仓库中上一个有效的 config.yaml 保持不变。")
 
-        print(f"\n[3/3] 生成 YAML（{len(valid)} 个有效节点）...")
-        yaml_content = self.generate_full_clash_yaml(valid)
+        results = []
+        print("\n[2/3] 获取代理地址...")
+        for i, node in enumerate(nodes, 1):
+            print(f"  {i}/{len(nodes)} {node['name']}")
+            proxy = self.get_proxy_for_node(node['id'])
+            if proxy:
+                results.append({"name": node["name"], "proxy": proxy})
+                print(f"    ✓ {proxy[:80]}...")
+            else:
+                print(f"    ✗ 失败")
+            time.sleep(0.8)
+
+        valid = self.deduplicate(results)
+        if not valid:
+            self._fail("没有任何节点取得有效代理地址，已终止。"
+                       "仓库中上一个有效的 config.yaml 保持不变。")
+
+        entries = []
+        for node in valid:
+            parsed = self.parse_proxy_entries(node['name'], node['proxy'])
+            if not parsed:
+                print(f"    [!] {node['name']}: 无法解析代理地址，已跳过")
+                continue
+            entries.extend(parsed)
+        entries = self.assign_unique_names(entries)
+        if not entries:
+            self._fail("代理地址全部无法解析，已终止。"
+                       "仓库中上一个有效的 config.yaml 保持不变。")
+
+        print(f"\n[3/3] 生成 YAML（{len(entries)} 个有效节点）...")
+        yaml_content = self.generate_full_clash_yaml(entries)
 
         os.makedirs(EXPORT_DIR, exist_ok=True)
         yaml_path = os.path.join(EXPORT_DIR, "config.yaml")
         with open(yaml_path, "w", encoding="utf-8") as f:
             f.write(yaml_content)
 
-        if valid:
-            print(f"\n✅ 生成完成：{yaml_path}")
-            print(f"✅ 有效节点：{len(valid)} 个")
-        else:
-            print(f"\n⚠️ 生成完成但无有效节点：{yaml_path}")
-            print("⚠️ 请检查 WYH_TOKEN / WYH_BASE_URL 是否正确")
+        print(f"\n✅ 生成完成：{yaml_path}")
+        print(f"✅ 有效节点：{len(entries)} 个")
 
 
 if __name__ == "__main__":
